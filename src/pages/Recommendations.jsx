@@ -5,78 +5,45 @@ import {reportService} from '../services/reportService'
 
 const Recommendations = () => {
 
-    const [rec,setRec] = useState('<p></p>')
+    const [rec,setRec] = useState('')
     const [recs,setRecs] = useState('[]')
 
-    const get = async()=>{
+    useEffect(()=>{
+        fetchRecs()
+    },[])
+
+    const fetchRecs = async()=>{
        const res = await reportService.getRecs({filter:'test'})
        setRecs(res)
     }
 
     const add = async()=>{
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = rec
-    const content = tempDiv.innerText
-    await reportService.addRec({desc:content})
+    const newRec = await reportService.addRec({desc:rec})
+    setRecs([...recs,newRec])
     }
 
     const update = async()=>{
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = rec
-    const content = tempDiv.innerText
-    await reportService.updateRec({id:recs[0].id,desc:content})
+    const updatedRec = await reportService.updateRec({id:recs[0].id,desc:rec})
+    const index = database.findIndex(obj => obj.id === updatedRec.id);
+
+    if (index !== -1) {
+      recs[index] = updatedRec;    
+    }
     }
     const remove = async()=>{
-        console.log(recs[recs.length-1].id);
-    await reportService.deleteRec({id:recs[recs.length-1].id})
+    const id = recs[recs.length-1].id
+    const stat = await reportService.deleteRec({id:recs[recs.length-1].id})
+    const updtaedRecs = recs.filter(obj => obj.id !== id);
+    stat && setRecs(updtaedRecs)
     }
 
-    const editorRef = useRef(null);
-    const plugins = [
-      "advlist",
-      "autolink",
-      "lists",
-      "link",
-      "image",
-      "charmap",
-      "preview",
-      "anchor",
-      "searchreplace",
-      "visualblocks",
-      "code",
-      "fullscreen",
-      "insertdatetime",
-      "media",
-      "table",
-      "code",
-      "help",
-      "wordcount",
-    ]
-    const toolbar = "undo redo | bold italic | bullist numlist | removeformat | help"
-
-    
     return (
         <center>
-            <button onClick={get}>getRecs</button>
         <h3>Recommendations</h3>
-        
-        <Editor
-        apiKey="your-api-key"
-        initialValue={rec}
-          onEditorChange={(ev) => setRec(ev)}
-          // onEditorChange = {(ev)=>setCustom(ev)}
-          onInit={(ev, editor) => (editorRef.current = editor)}
-          init={{
-            height: 200,
-            menubar: false,
-            plugins,
-            toolbar,
-            content_style:
-            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-          }}
-          /> 
-          <button onClick={add}> Create </button>
+        <input onInput={(ev)=>setRec(ev.target.value)} value={rec}></input>
           <div>
+          <button onClick={add}> Create </button>
+          </div><div>
           <button onClick={update}> Update first </button>
           </div>
           <div>
