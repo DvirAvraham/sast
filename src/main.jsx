@@ -1,8 +1,7 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Layout from './layout.jsx'
-import Test from './pages/test.jsx'
+import Recommendations from './pages/Recommendations.jsx'
 import './index.css'
 import {
   Routes,
@@ -16,8 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<App />} />
-          <Route path="Test" element={<Test />} />
-          {/* <Route path="contact" element={<Contact />} /> */}
+          <Route path="Recommendations" element={<Recommendations />} />
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
       </Routes>

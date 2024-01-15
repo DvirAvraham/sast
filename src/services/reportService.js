@@ -6,17 +6,51 @@ const axios = Axios.create({
 
 const BASE_URL = 'http://localhost:3001'
 
-const createReport = async (data = { a: 'a', b: 'b' }, headers = null) => {
+const createReport = async (data) => {
   const res = await axios({
     url: `${BASE_URL}/api/generate`,
     method: 'POST',
     data,
-    params: data,
-    headers
+  })
+  return res.data
+}
+const deleteRec = async (data) => {
+  const res = await axios({
+    url: `${BASE_URL}/api/recs`,
+    method: 'DELETE',
+    data,
+  })
+  return res.data
+}
+const updateRec = async (data) => {
+  const res = await axios({
+    url: `${BASE_URL}/api/recs`,
+    method: 'PUT',
+    data,
+  })
+  return res.data
+}
+const addRec = async (data) => {
+  const res = await axios({
+    url: `${BASE_URL}/api/recs`,
+    method: 'POST',
+    data,
+  })
+  return res.data
+}
+const getRecs = async (params) => {
+  const res = await axios({
+    url: `${BASE_URL}/api/recs`,
+    method: 'GET',
+    params,
   })
   return res.data
 }
 
-export const authService = {
-  createReport
+export const reportService = {
+  createReport,
+  deleteRec,
+  updateRec,
+  getRecs,
+  addRec
 };

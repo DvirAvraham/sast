@@ -1,4 +1,4 @@
-import { authService } from './services/reportService'
+import { reportService } from './services/reportService'
 import { Editor } from "@tinymce/tinymce-react";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -114,7 +114,7 @@ function App() {
   //   }
 
   //   console.log(data, 'data');
-  //   const res = await authService.createReport(data)
+  //   const res = await reportService.createReport(data)
   //   console.log(res, 'res');
   // }
 
@@ -138,7 +138,7 @@ function App() {
     console.log(reportData, 'data');
 
     try {
-      const res = await authService.createReport(reportData);
+      const res = await reportService.createReport(reportData);
       console.log(res, 'res');
       // Handle success - e.g., show a success message, clear the form, etc.
     } catch (error) {
