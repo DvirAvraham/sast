@@ -150,9 +150,9 @@ function App() {
 
   return (
     <React.Fragment >
+      
       <div className={darkMode ? 'dark' : ''}>
         <div className=' app bg-white dark:bg-slate-900 flex '>
-
           <div className="w-full max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
             <form className="w-full flex gap-6	" onSubmit={(e) => { e.preventDefault(); create(); }}>
@@ -212,49 +212,59 @@ function App() {
               <div className='w-full form-right'>
 
                 <div className="mb-5 w-full">
-                  <label htmlFor="tools" class="block mb-2 text-s font-medium text-gray-900 dark:text-white">Select Tools For Scan</label>
-                  <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div class="flex items-center ps-3">
+                  <label htmlFor="tools" className="block mb-2 text-s font-medium text-gray-900 dark:text-white">Select Tools For Scan</label>
+                  <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div className="flex items-center ps-3">
                         <input id="semgrep"
                           name="semgrep"
                           checked={formData.selectedTools.semgrep}
                           onChange={handleInputChange}
-                          type="checkbox"  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="semgrep" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Semgrep</label>
+                          type="checkbox"  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="semgrep" className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Semgrep</label>
                       </div>
                     </li>
-                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div class="flex items-center ps-3">
+                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div className="flex items-center ps-3">
                         <input id="bearer" type="checkbox" 
                           name="bearer"
                           checked={formData.selectedTools.bearer}
                           onChange={handleInputChange}
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="bearer" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bearer</label>
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="bearer" className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bearer</label>
                       </div>
                     </li>
-                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div class="flex items-center ps-3">
+                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div className="flex items-center ps-3">
                         <input
                           name="snyk"
                           checked={formData.selectedTools.snyk.c}
                           onChange={handleInputChange}
                           id="snyk"
                           type="checkbox"
-                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="snyk" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Snyk</label>
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="snyk" className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Snyk</label>
                       </div>
                       {formData.selectedTools.snyk.checked && (<input type="text" value={formData.selectedTools.snyk.authToken}
                         onChange={handleAuthTokenChange}
-                        required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Auth Token..." />)}
+                        required className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Auth Token..." />)}
                     </li>
                   </ul>
                 </div>
-
+                      <div className="flex items-center ps-3">
+                        <input
+                          name="isMedium"
+                          checked={formData.isMedium}
+                          onChange={handleInputChange}
+                          id="isMedium"
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="isMedium" className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Medium</label>
+                      </div>
               </div>
             </form>
           </div>
+
 
           {/* <form classname="w-full max-w-lg">
         <div classname="flex flex-wrap -mx-3 mb-6">
