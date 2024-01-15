@@ -2,23 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+html {
+  height: 100vh;
+}
 
-  color-scheme: light dark;
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  /* height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center; */
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  /* line-height: 1.5;
+  font-weight: 400; */
+
+  /* color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* overflow-x: hidden; */
+  -moz-osx-font-smoothing: grayscale; */
 }
 
-.tox-notification{
+/* .tox-notification{
   opacity: 0 !important;
   position: absolute !important;
   z-index: 0 !important;
@@ -82,4 +98,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
