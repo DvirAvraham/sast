@@ -35,10 +35,9 @@ function App() {
   const [project, setProject] = useState('')
   const [company, setCompany] = useState('')
   const [date, setDate] = useState(Date.now())
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
     project: '',
     date: Date.now(),
     company: '',
@@ -55,15 +54,20 @@ function App() {
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
     if (type === 'checkbox') {
+      // Handling checkboxes
       setFormData(prevState => ({
         ...prevState,
         selectedTools: {
           ...prevState.selectedTools,
-          [name]: name === 'snyk' ? { ...prevState.selectedTools.snyk, checked } : checked,
+          [name]: name === 'snyk' ? { ...prevState.selectedTools.snyk, checked: checked } : checked,
         },
       }));
     } else {
-      // ... handle other inputs ...
+      // Handling text inputs and textareas
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
@@ -99,20 +103,50 @@ function App() {
   // };
 
 
-  const create = async () => {
-    const data = {
-      limit,
-      summary,
-      custom,
-      project,
-      company,
-      date,
-    }
+  // const create = async () => {
+  //   const data = {
+  //     limit,
+  //     summary,
+  //     custom,
+  //     project,
+  //     company,
+  //     date,
+  //   }
 
-    console.log(data, 'data');
-    const res = await authService.createReport(data)
-    console.log(res, 'res');
-  }
+  //   console.log(data, 'data');
+  //   const res = await authService.createReport(data)
+  //   console.log(res, 'res');
+  // }
+
+  const create = async () => {
+    // Assemble the data
+    const reportData = {
+      ...formData,
+      tools: Object.entries(formData.selectedTools)
+        .filter(([key, value]) =>
+          typeof value === 'object' ? value.checked : value
+        )
+        .map(([key, value]) => {
+          // If the tool has additional data (like auth token), include it
+          if (typeof value === 'object') {
+            return { tool: key, ...value };
+          }
+          return { tool: key };
+        }),
+    };
+
+    console.log(reportData, 'data');
+
+    try {
+      const res = await authService.createReport(reportData);
+      console.log(res, 'res');
+      // Handle success - e.g., show a success message, clear the form, etc.
+    } catch (error) {
+      console.error('Error creating report:', error);
+      // Handle error - e.g., show an error message
+    }
+  };
+
 
   return (
     <React.Fragment >
@@ -126,13 +160,22 @@ function App() {
               <div className='w-full form-left'>
 
                 <div className="mb-5">
-                  <label htmlFor="name" className="block mb-2 text-s font-medium text-gray-900 dark:text-white">Project Name</label>
-                  <input type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="SAST Project" onInput={(ev) => { setProject(ev.target.value) }} required />
+                  <label htmlFor="project" className="block mb-2 text-s font-medium text-gray-900 dark:text-white">Project Name</label>
+                  <input type="text"
+                    name="project"
+                    value={formData.project}
+                    onInput={handleInputChange}
+                    required
+                    id="project" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="SAST Project" />
                 </div>
 
                 <div className="mb-5">
                   <label htmlFor="date" className="block mb-2 text-s font-medium text-gray-900 dark:text-white">Date</label>
-                  <input type="date" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onInput={(ev) => { setDate(ev.target.value) }} />
+                  <input type="date"
+                    name="date"
+                    value={formData.date}
+                    onInput={handleInputChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 </div>
 
                 <div className="mb-5">
@@ -168,34 +211,43 @@ function App() {
 
               <div className='w-full form-right'>
 
-
                 <div className="mb-5 w-full">
-                  <label htmlFor="tools" className="block mb-2 text-s font-medium text-gray-900 dark:text-white">Select Tools For Scan</label>
-                  <ul classname="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white ">
-                    <li classname="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div classname="flex items-center ps-3">
-                        <input id="semgrep" type="checkbox" value="1" classname="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="semgrep" classname="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Semgrep</label>
+                  <label htmlFor="tools" class="block mb-2 text-s font-medium text-gray-900 dark:text-white">Select Tools For Scan</label>
+                  <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div class="flex items-center ps-3">
+                        <input id="semgrep"
+                          name="semgrep"
+                          checked={formData.selectedTools.semgrep}
+                          onChange={handleInputChange}
+                          type="checkbox"  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="semgrep" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Semgrep</label>
                       </div>
                     </li>
-                    <li classname="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div classname="flex items-center ps-3">
-                        <input id="bearer" type="checkbox" value="2" classname="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="bearer" classname="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bearer</label>
+                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div class="flex items-center ps-3">
+                        <input id="bearer" type="checkbox" 
+                          name="bearer"
+                          checked={formData.selectedTools.bearer}
+                          onChange={handleInputChange}
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="bearer" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bearer</label>
                       </div>
                     </li>
-                    <li classname="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div classname="flex items-center ps-3">
+                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <div class="flex items-center ps-3">
                         <input
                           name="snyk"
-                          checked={formData.selectedTools.snyk}
+                          checked={formData.selectedTools.snyk.c}
                           onChange={handleInputChange}
                           id="snyk"
                           type="checkbox"
-                          classname="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                        <label htmlFor="snyk" classname="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Snyk</label>
+                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                        <label htmlFor="snyk" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Snyk</label>
                       </div>
-                      {formData.selectedTools.snyk.checked && (<input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Auth Token..." required />)}
+                      {formData.selectedTools.snyk.checked && (<input type="text" value={formData.selectedTools.snyk.authToken}
+                        onChange={handleAuthTokenChange}
+                        required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Auth Token..." />)}
                     </li>
                   </ul>
                 </div>
